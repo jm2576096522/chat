@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 映射文件的命名空间namespace的值是与之对应的映射接口的全类名 -->
+<mapper namespace="com.yc.ssm.us.mapper.UserMapper">
+	<select id="finUser" parameterType="User" resultType="User">
+		select *
+		from users where password=#{password} and (name=#{name} or id=#{name})
+	</select>
+
+	<select id="partUser" parameterType="PaginationBean"
+		statementType="CALLABLE">
+		{call pro_paginationUser(#{currPage},#{pageSize},
+		#{total ,mode=OUT,javaType=int,jdbcType=INTEGER},
+		#{totalPage,
+		mode=OUT,javaType=int,jdbcType=INTEGER},
+		#{rows,
+		mode=OUT,jdbcType=CURSOR,resultMap=UserMap})}
+	</select>
+	<resultMap type="User" id="UserMap">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="password" property="password" />
+		<result column="birthday" property="birthday" />
+		<result column="gender" property="gender" />
+		<result column="career" property="career" />
+		<result column="address" property="address" />
+		<result column="mobile" property="mobile" />
+		<result column="picPath" property="picPath" />
+	</resultMap>
+
+	<update id="updataUser" parameterType="User">
+		update users
+		<set>
+			<if test="name!=null">
+				name=#{name},
+			</if>
+			<if test="birthday!=null">
+				birthday=#{birthday},
+			</if>
+			<if test="gender!=null">
+				gender=#{gender},
+			</if>
+			<if test="career!=null">
+				career=#{career},
+			</if>
+			<if test="address!=null">
+				address=#{address},
+			</if>
+			<if test="mobile!=null">
+				mobile=#{mobile},
+			</if>
+			<if test="picPath!=null">
+				picPath=#{picPath}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+
+</mapper>

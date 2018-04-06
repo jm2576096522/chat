@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+         http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!--引入外部的属性文件 -->
+	<context:property-placeholder location="classpath:db.properties" />
+
+
+	<!-- 配置数据源 交给spring管理 -->
+	<bean id="dataSource" class="org.apache.tomcat.dbcp.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+
+	<!--mybatis的 sqlSessionFactory对象给spring容器管理 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- 自动配置别名 -->
+		<property name="typeAliasesPackage" value="" />
+		<property name="mapperLocations" value="classpath:mapper/*Mapper.xml" />
+	</bean>
+
+
+	<!-- 配置映射接口对应的 根据映射文件生成的代理实现类bean，默认代理实现类bean的id为映射接口名（首字母小写） -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="" /><!--映射接口所在的包 -->
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+
+	<!-- 使用注解的方式，使用spring的IOC/DI 1.指定要扫描注解的包 2.对要交给spring容器管理的类进行注解 3.对要注入值得属性进行注解 -->
+
+	<!-- <context:component-scan base-package="com.yc.ssm.us"></context:component-scan> -->
+	<aop:aspectj-autoproxy />
+
+	<!--为了防止重复创建bean ，spring容器管理不包括@controller 修饰的bean ，这些bean交由springmvc管理 -->
+	<context:component-scan base-package="com.yc.ssm.us">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+</beans>
