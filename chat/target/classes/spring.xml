@@ -14,6 +14,7 @@
 	<!--引入外部的属性文件 -->
 	<context:property-placeholder location="classpath:jdbc.properties" />
 
+
 	<!-- 配置数据源 交给spring管理 -->
 	<bean id="dataSource" class="org.apache.tomcat.dbcp.dbcp.BasicDataSource">
 		<property name="driverClassName" value="${jdbc.driver}" />
