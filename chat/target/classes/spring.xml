@@ -40,11 +40,11 @@
 
 	<!-- 使用注解的方式，使用spring的IOC/DI 1.指定要扫描注解的包 2.对要交给spring容器管理的类进行注解 3.对要注入值得属性进行注解 -->
 
-	<!-- <context:component-scan base-package="com.yc.ssm.us"></context:component-scan> -->
+	<!-- <context:component-scan base-package="com.jm.chat"></context:component-scan> -->
 	<aop:aspectj-autoproxy />
 
 	<!--为了防止重复创建bean ，spring容器管理不包括@controller 修饰的bean ，这些bean交由springmvc管理 -->
-	<context:component-scan base-package="com.yc.ssm.us">
+	<context:component-scan base-package="com.jm.chat">
 		<context:exclude-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
